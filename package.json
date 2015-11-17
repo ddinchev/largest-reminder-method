@@ -1,0 +1,18 @@
+{
+  "name": "election_seat_allocator",
+  "version": "0.1.0",
+  "main": "./main.js",
+  "scripts": {
+    "start": "electron .",
+    "package": "electron-packager ./ LargestReminderAllocator --all --out ~/Desktop/LargestReminderAllocator --version 0.35.0 --platform darwin --overwrite --icon ./app/img/app-icon.png"
+  },
+  "devDependencies": {
+    "electron-packager": "^5.1.1",
+    "electron-prebuilt": "^0.35.0"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4",
+    "lodash": "^3.10.1",
+    "nconf": "^0.8.2"
+  }
+}
