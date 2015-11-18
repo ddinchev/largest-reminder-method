@@ -34,7 +34,10 @@ function appendInfo(message) {
     var realVotesSum = base.getRealVotesSum();
     appendInfo('Сума от всички действителни гласове: ' + realVotesSum);
     appendInfo('Четири на сто от действителните гласове в страната и извън страната: ' + base.getMinimumVotesToGetElected());
-    appendInfo('Сума от действителни гласове за партии и коалиции от партии, които участват в разпределението на мандатите: ' + base.getElectedPartiesVotesSum())
+    appendInfo('Сума от действителни гласове за партии и коалиции от партии, които участват в разпределението на мандатите: ' + base.getElectedPartiesVotesSum());
+
+    var hareQuote = base.getHareQuote(base.getElectedPartiesVotesSum(), 240);
+    appendInfo('Квота на Хеър: ' + hareQuote);
 
     append(nationalMandatesMatrix.getNationalPartyMandatesMatrix());
 })();

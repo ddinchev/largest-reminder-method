@@ -2,6 +2,25 @@
 
 var base = require('./00_base.js');
 
+
+function getRegionsHeaderRow() {
+    var row = $('<tr/>');
+    _.each(data.regions, function (region) {
+        row.append(base.cell(region));
+    });
+    return row;
+}
+
+function getPartyVotesRow(partyId) {
+    var partyName = data.parties[partyId];
+    var row = base.row(partyName);
+    _.each(_.keys(data.regions), function (regionId) {
+        row.append(base.cell(data.partyRegionVotes[partyId][regionId]));
+    });
+    row.append(base.cell(base.getPartyVotesSum(partyId)));
+    return row;
+}
+
 function getTable() {
     var table = $(
         '<table id="votes-matrix">' +
@@ -13,39 +32,28 @@ function getTable() {
         '</table>'
     );
 
-    $(table).append(function () {
-        var row = $('<tr/>');
-        _.each(data.regions, function (region) {
-            $(row).append('<td>' + region + '</td>');
-        });
-        return row;
+    $(table).append(getRegionsHeaderRow());
+
+    _.each(_.keys(data.parties), function (partyId) {
+        table.append(getPartyVotesRow(partyId));
     });
 
-    _.each(data.parties, function (partyName, partyIndex) {
-        table.append(function () {
-            var row = base.row(partyIndex + '. ' + partyName);
-            _.each(data.regions, function (regionName, regionIndex) {
-                row.append('<td>' + data.partyRegionVotes[partyIndex][regionIndex] + '</td>');
-            });
-            $('<td>' + base.getPartyVotesSum(partyIndex) + '</td>').appendTo(row);
-            return row;
-        });
-    });
+
+    var regionVotes = base.getRegionVotes();
 
     table.append(function () {
         var row = $('<tr><td>Общо за района</td></tr>');
-        var total = 0;
-        _.each(data.regions, function (regionName, regionKey) {
-            var sum = 0;
-            _.each(data.partyRegionVotes, function (partyRegion) {
-                sum += partyRegion[regionKey];
-            });
-            total += sum;
-            row.append(base.cell(sum));
+        _.each(regionVotes, function (votes) {
+            row.append(base.cell(votes));
         });
-        row.append('<td>' + total + '</td>');
+        row.append(base.cell(_.sum(regionVotes)));
         return row;
     });
+
+
+    var regionMandates = {};
+//    _.each(r)
+
 
     return table;
 }
