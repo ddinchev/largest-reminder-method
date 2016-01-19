@@ -3,9 +3,16 @@
 var core = require(__dirname + '/core.js');
 var helpers = require(__dirname + '/helpers.js');
 
-function buildNationalPartyMandatesMatrix() {
-    var electedPartyDistributions = core.getElectedPartiesDistribution();
+function buildNationalPartyMandatesSection() {
+    var wrapper = $('<div class="natinal-party-matrix-wrapper" />');
+    helpers.appendSectionTitle(wrapper, 'Първа стъпка – разпределение на мандатите за всяка партия и коалиция на национално ниво:');
 
+    helpers.appendInfoMessage(wrapper, 'Сума от всички действителни гласове: ' + core.getRealVotesSum());
+    helpers.appendInfoMessage(wrapper, 'Четири на сто от действителните гласове в страната и извън страната: ' + core.getMinimumVotesToGetElected());
+    helpers.appendInfoMessage(wrapper, 'Сума от действителни гласове за партии и коалиции от партии, които участват в разпределението на мандатите: ' + core.getElectedPartiesVotesSum());
+    helpers.appendInfoMessage(wrapper, 'Квота на Хеър: ' + core.getHareQuote(core.getElectedPartiesVotesSum(), 240));
+
+    var electedPartyDistributions = core.getElectedPartiesDistribution();
     var table = $('<table class="national-level-party-mandates" />');
     table.append(function () {
         var headerRow = helpers.row('Партия');
@@ -36,9 +43,10 @@ function buildNationalPartyMandatesMatrix() {
         return [headerRow, realVotesRow, quotientRow, baseMandatesRow, remindersRow, extraMandatesRow, totalMandatesRow];
     });
 
-    return table;
+    wrapper.append(table);
+    return wrapper;
 }
 
 module.exports = {
-    buildNationalPartyMandatesMatrix: buildNationalPartyMandatesMatrix
+    buildNationalPartyMandatesSection: buildNationalPartyMandatesSection
 };

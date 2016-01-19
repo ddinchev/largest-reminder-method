@@ -4,7 +4,10 @@ var core = require('./core.js');
 var helpers = require('./helpers.js');
 var data = core.getData();
 
-function buildRegionQuotesMatrix(d) {
+function buildRegionQuotesSection() {
+    var wrapper = $('<div class="region-quotes-section" />');
+    helpers.appendSectionTitle(wrapper, "Районни избирателни квоти:");
+
     var table = $('<table id="region-quotes-table" class="" />');
 
     $(table).append('<td align="center" colspan="' + _.size(data["regionQuotes"]) + '">Квоти по райони</td>');
@@ -19,10 +22,15 @@ function buildRegionQuotesMatrix(d) {
 
     $(regionsIdRow).appendTo(table);
     $(regionsQuoteRow).appendTo(table);
-    return table;
+    wrapper.append(table);
+
+    return wrapper;
 }
 
-function buildPartyXRegionVotesMatrix() {
+function buildPartyXRegionVotesSection() {
+    var wrapper = $('<div class="region-votes-section" />');
+    helpers.appendSectionTitle(wrapper, 'Действителни гласове за партии и коалиции от партии по райони:');
+
     var table = $(
         '<table id="votes-matrix">' +
         '<tr align="center">' +
@@ -70,10 +78,12 @@ function buildPartyXRegionVotesMatrix() {
         return row;
     });
 
-    return table;
+    wrapper.append(table);
+
+    return wrapper;
 }
 
 module.exports = {
-    buildRegionQuotesMatrix: buildRegionQuotesMatrix,
-    buildPartyXRegionVotesMatrix: buildPartyXRegionVotesMatrix
+    buildRegionQuotesSection: buildRegionQuotesSection,
+    buildPartyXRegionVotesSection: buildPartyXRegionVotesSection
 };

@@ -12,8 +12,23 @@ function emptyCell() {
     return cell('-');
 }
 
+function append(container, node) {
+    container.append(node);
+}
+
+function appendSectionTitle(container, message) {
+    container.append($('<div class="section-title">' + message + '</div>'));
+}
+
+function appendInfoMessage(container, message) {
+    container.append($('<div class="info-message">' + message + '</div>'));
+}
+
 module.exports = {
     cell: cell,
     row: row,
-    emptyCell: emptyCell
+    emptyCell: emptyCell,
+    append: append,
+    appendSectionTitle: appendSectionTitle,
+    appendInfoMessage: appendInfoMessage
 };

@@ -114,21 +114,71 @@ function getRegionMandates() {
     }));
 }
 
+var electedPartiesDistribution = null;
 function getElectedPartiesDistribution() {
-    var totalMandates = getTotalMandates();
-    var electedPartiesVotes = getElectedPartiesVotesSum();
-    var hareQuote = getHareQuote(electedPartiesVotes, totalMandates);
+    if (electedPartiesDistribution == null) {
+        var totalMandates = getTotalMandates();
+        var electedPartiesVotes = getElectedPartiesVotesSum();
+        var hareQuote = getHareQuote(electedPartiesVotes, totalMandates);
+        var electedParties = getElectedParties();
+
+        var mandatesRemaining = totalMandates;
+        var electedPartyDistributions = [];
+        _.each(electedParties, function (partyVotes, partyId) {
+            var quotient = electedParties[partyId] / hareQuote;
+            var baseMandates = Math.floor(quotient);
+            var reminder = quotient - baseMandates;
+            mandatesRemaining -= baseMandates;
+            electedPartyDistributions.push({
+                id: partyId,
+                name: getParties()[partyId],
+                quotient: quotient,
+                baseMandates: baseMandates,
+                reminder: reminder,
+                // this will be updated later
+                extraMandates: 0,
+                totalMandates: baseMandates
+            });
+        });
+
+        var descByRemainders = _.sortBy(electedPartyDistributions, 'reminder').reverse();
+        for (var i = 0; i < descByRemainders.length && mandatesRemaining > 0; i++) {
+            descByRemainders[i].extraMandates++;
+            descByRemainders[i].totalMandates++;
+            mandatesRemaining--;
+        }
+
+        // example data
+        // [{ id: 1, name: "Герб", quotient: 123.32, baseMandates: 13,
+        // reminder: 0.987, extraMandates: 1, totalMandates: 25 }, ...]
+        electedPartiesDistribution = _.object(_.map(descByRemainders, function (party) {
+            return [party.id, party];
+        }));
+    }
+    return electedPartiesDistribution;
+}
+
+function getRegionPartyDistribution(regionId) {
+    var regionName = getRegions()[regionId].toUpperCase();
+    var regionVotesSum = _.sum(_.map(getElectedParties(), function (partyVotes, partyId) {
+        return getPartyRegionVotes(partyId, regionId);
+    }));
+    var totalMandates = getRegionMandates()[regionId];
+    var hareQuote = getHareQuote(regionVotesSum, totalMandates);
     var electedParties = getElectedParties();
 
     var mandatesRemaining = totalMandates;
-    var electedPartyDistributions = [];
-    _.each(electedParties, function (partyName, partyId) {
-        var quotient = electedParties[partyId] / hareQuote;
+    var regionPartyDistributions = [];
+    _.each(electedParties, function (partyVotes, partyId) {
+        var regionVotes = getPartyRegionVotes(partyId, regionId);
+        var quotient = regionVotes / hareQuote;
         var baseMandates = Math.floor(quotient);
         var reminder = quotient - baseMandates;
         mandatesRemaining -= baseMandates;
-        electedPartyDistributions.push({
+        regionPartyDistributions.push({
             id: partyId,
+            name: getParties()[partyId],
+            votes: regionVotes,
             quotient: quotient,
             baseMandates: baseMandates,
             reminder: reminder,
@@ -138,27 +188,25 @@ function getElectedPartiesDistribution() {
         });
     });
 
-    var descByRemainders = _.sortBy(electedPartyDistributions, 'reminder').reverse();
+    var descByRemainders = _.sortBy(regionPartyDistributions, 'reminder').reverse();
     for (var i = 0; i < descByRemainders.length && mandatesRemaining > 0; i++) {
         descByRemainders[i].extraMandates++;
         descByRemainders[i].totalMandates++;
         mandatesRemaining--;
     }
 
-    /*
-     example data
-     [{
-     id: 1,
-     quotient: 123.32,
-     baseMandates: 13,
-     reminder: 0.987,
-     extraMandates: 1,
-     totalMandates: 25
-     }, ...]
-     */
-    return _.object(_.map(descByRemainders, function (party) {
+    regionPartyDistributions = _.object(_.map(descByRemainders, function (party) {
         return [party.id, party];
     }));
+
+    return {
+        id: regionId,
+        name: regionName,
+        totalVotes: regionVotesSum,
+        totalMandates: totalMandates,
+        hareQuote: hareQuote,
+        partyDistributions: regionPartyDistributions
+    };
 }
 
 module.exports = {
@@ -175,5 +223,6 @@ module.exports = {
     getRealVotesSum: getRealVotesSum,
     getRegionVotes: getRegionVotes,
     getRegionMandates: getRegionMandates,
+    getRegionPartyDistribution: getRegionPartyDistribution,
     getElectedPartiesDistribution: getElectedPartiesDistribution
 };
