@@ -25,10 +25,10 @@ function appendInfo(message) {
 
 (function () {
     appendInfo("Районни избирателни квоти:");
-    append(regionQuotes.getTable(data));
+    append(regionQuotes.createTable(data));
 
     appendInfo('Действителни гласове за партии и коалиции от партии по райони:');
-    append(votesMatrix.getTable(data));
+    append(votesMatrix.createTable(data));
 
     appendInfo('Първа стъпка – разпределение на мандатите за всяка партия и коалиция на национално ниво');
     var realVotesSum = base.getRealVotesSum();

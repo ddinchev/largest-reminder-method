@@ -21,7 +21,7 @@ function getPartyVotesRow(partyId) {
     return row;
 }
 
-function getTable() {
+function createTable() {
     var table = $(
         '<table id="votes-matrix">' +
         '<tr align="center">' +
@@ -59,5 +59,5 @@ function getTable() {
 }
 
 module.exports = {
-    getTable: getTable
+    createTable: createTable
 };
