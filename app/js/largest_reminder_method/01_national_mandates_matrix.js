@@ -39,15 +39,6 @@ function buildNationalPartyMandatesMatrix() {
     return table;
 }
 
-
-
-
-function buildRegionElectedPartyMandatesSection(regionId) {
-    // var table = $('<table class="region-party-mandates" />');
-
-}
-
 module.exports = {
-    buildNationalPartyMandatesMatrix: buildNationalPartyMandatesMatrix,
-    buildRegionElectedPartyMandatesSection: buildRegionElectedPartyMandatesSection
+    buildNationalPartyMandatesMatrix: buildNationalPartyMandatesMatrix
 };

@@ -27,17 +27,21 @@ function renderResults() {
 
     appendSubSection("Районни избирателни квоти:");
     append(resultsData.buildRegionQuotesMatrix());
-
-    appendInfoMessage('Действителни гласове за партии и коалиции от партии по райони:');
+    appendSubSection('Действителни гласове за партии и коалиции от партии по райони:');
     append(resultsData.buildPartyXRegionVotesMatrix());
 
-    appendSubSection('Първа стъпка – разпределение на мандатите за всяка партия и коалиция на национално ниво');
+    appendSubSection('Първа стъпка – разпределение на мандатите за всяка партия и коалиция на национално ниво:');
     appendInfoMessage('Сума от всички действителни гласове: ' + core.getRealVotesSum());
     appendInfoMessage('Четири на сто от действителните гласове в страната и извън страната: ' + core.getMinimumVotesToGetElected());
     appendInfoMessage('Сума от действителни гласове за партии и коалиции от партии, които участват в разпределението на мандатите: ' + core.getElectedPartiesVotesSum());
     appendInfoMessage('Квота на Хеър: ' + core.getHareQuote(core.getElectedPartiesVotesSum(), 240));
-
     append(nationalMandatesMatrix.buildNationalPartyMandatesMatrix());
+
+    appendSubSection('Втора стъпка – разпределение на спечелените мандати за всяка партия или коалиция в многомандатните избирателни райони:');
+    _.each(core.getRegions(), function (regionName, regionId) {
+
+        debugger;
+    });
 }
 
 renderResults();
