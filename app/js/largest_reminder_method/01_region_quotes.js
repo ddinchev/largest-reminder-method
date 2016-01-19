@@ -2,7 +2,7 @@
 
 var base = require('./00_base.js');
 
-function getTable(d) {
+function createTable(d) {
     var table = $('<table id="region-quotes-table" class="" />');
 
     $(table).append('<td align="center" colspan="' + _.size(data.regionQuotes) + '">Квоти по райони</td>');
@@ -21,5 +21,5 @@ function getTable(d) {
 }
 
 module.exports = {
-    getTable: getTable
+    createTable: createTable
 };

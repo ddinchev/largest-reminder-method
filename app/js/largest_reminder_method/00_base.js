@@ -72,6 +72,10 @@ function row(firstCell) {
     return $('<tr />').append(cell(firstCell));
 }
 
+function emptyCell() {
+    return cell('-');
+}
+
 var regionMandates = {
     "1": 11,
     "2": 14,
@@ -117,5 +121,6 @@ module.exports = {
     getRealVotesSum: getRealVotesSum,
     getRegionVotes: getRegionVotes,
     cell: cell,
-    row: row
+    row: row,
+    emptyCell: emptyCell
 };

@@ -3,71 +3,98 @@
 var data = require(__dirname + '/../../data/parliament-elections-2014-bulgaria.json');
 var base = require(__dirname + '/00_base.js');
 
-var partyBaseMandates = null;
-var partyMandates = null;
-
-function getNationalPartyMandatesMatrix() {
-    var table = $('<table class="national-level-party-mandates" />');
-    var headerRow = base.row('Партия');
-    _.each(data.parties, function (partyName, partyId) {
-        headerRow.append(base.cell(partyName));
-    });
-    table.append(headerRow);
-
-    var realVotesRow = base.row('Действ. гласове');
-    _.each(data.parties, function (partyName, partyId) {
-        realVotesRow.append(base.cell(base.getPartyVotesSum(partyId)));
-    });
-    table.append(realVotesRow);
-
-
+function calculateElectedPartiesDistribution() {
+    var totalMandates = data["TOTAL_MANDATES"];
     var electedPartiesVotes = base.getElectedPartiesVotesSum();
-    var hareQuote = base.getHareQuote(electedPartiesVotes, 240);
+    var hareQuote = base.getHareQuote(electedPartiesVotes, totalMandates);
     var electedParties = base.getElectedParties();
-    table.append(function () {
-        // we will fill the total mandates here
-        var quotients = {},
-            baseMandates = {},
-            reminders = {},
-            extraMandates = {},
-            totalMandates = {};
 
-        _.each(base.parties, function (partyName, partyId) {
-            totalMandates[partyId] = null;
+    var mandatesRemaining = totalMandates;
+    var electedPartyDistributions = [];
+    _.each(electedParties, function (partyName, partyId) {
+        var quotient = electedParties[partyId] / hareQuote;
+        var baseMandates = Math.floor(quotient);
+        var reminder = quotient - baseMandates;
+        mandatesRemaining -= baseMandates;
+        electedPartyDistributions.push({
+            id: partyId,
+            quotient: quotient,
+            baseMandates: baseMandates,
+            reminder: reminder,
+            // this will be updated later
+            extraMandates: 0,
+            totalMandates: baseMandates
         });
+    });
 
-        
+    var descByRemainders = _.sortBy(electedPartyDistributions, 'reminder').reverse();
+    for (var i = 0; i < descByRemainders.length && mandatesRemaining > 0; i++) {
+        descByRemainders[i].extraMandates++;
+        descByRemainders[i].totalMandates++;
+        mandatesRemaining--;
+    }
 
+    return _.object(_.map(descByRemainders, function (party) {
+        return [party.id, party];
+    }));
+}
+
+/*
+example data
+ [{
+     id: 1,
+     quotient: 123.32,
+     baseMandates: 13,
+     reminder: 0.987,
+     extraMandates: 1,
+     totalMandates: 25
+ }, ...]
+*/
+var electedPartyDistributions = calculateElectedPartiesDistribution();
+
+function buildNationalPartyMandatesMatrix() {
+    var table = $('<table class="national-level-party-mandates" />');
+    table.append(function () {
+        var headerRow = base.row('Партия');
+        var realVotesRow = base.row('Действ. гласове');
         var quotientRow = base.row('Частно');
         var baseMandatesRow = base.row('Осн. манд.');
         var remindersRow = base.row('Остатък');
         var extraMandatesRow = base.row('Доп. манд.');
-        // var totalMandatesRow = base.row('Общо манд.');
+        var totalMandatesRow = base.row('Общо манд.');
         _.each(data.parties, function (partyName, partyId) {
-            if (!electedParties.hasOwnProperty(partyId)) {
-                quotientRow.append(base.cell('-'));
-                baseMandatesRow.append(base.cell('-'));
-                remindersRow.append(base.cell('-'));
+            headerRow.append(base.cell(partyName));
+            realVotesRow.append(base.cell(base.getPartyVotesSum(partyId)));
+
+            if (!electedPartyDistributions.hasOwnProperty(partyId)) {
+                _.each([quotientRow, baseMandatesRow, remindersRow, extraMandatesRow, totalMandatesRow], function (row) {
+                   row.append(base.emptyCell());
+                });
             } else {
-                var quotient = (electedParties[partyId] / hareQuote).toFixed(6);
-                var baseMandates = Math.floor(quotient);
-                var reminder = (quotient - baseMandates).toFixed(6);
-                quotientRow.append(base.cell(quotient));
-                baseMandatesRow.append(base.cell(baseMandates));
-                remindersRow.append(base.cell(reminder))
+                var partyDistribution = electedPartyDistributions[partyId];
+                quotientRow.append(base.cell(partyDistribution.quotient.toFixed(6)));
+                baseMandatesRow.append(base.cell(partyDistribution.baseMandates));
+                remindersRow.append(base.cell(partyDistribution.reminder.toFixed(6)));
+                extraMandatesRow.append(base.cell(partyDistribution.extraMandates));
+                totalMandatesRow.append(base.cell(partyDistribution.totalMandates));
             }
         });
-        return [quotientRow, baseMandatesRow, remindersRow, extraMandatesRow];
+
+        return [headerRow, realVotesRow, quotientRow, baseMandatesRow, remindersRow, extraMandatesRow, totalMandatesRow];
     });
-
-
-
-
-
 
     return table;
 }
 
+
+
+
+function buildRegionElectedPartyMandatesSection(regionId) {
+    // var table = $('<table class="region-party-mandates" />');
+
+}
+
 module.exports = {
-    getNationalPartyMandatesMatrix: getNationalPartyMandatesMatrix
+    buildNationalPartyMandatesMatrix: buildNationalPartyMandatesMatrix,
+    buildRegionElectedPartyMandatesSection: buildRegionElectedPartyMandatesSection
 };
