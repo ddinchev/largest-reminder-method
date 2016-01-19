@@ -4,37 +4,40 @@
 
 var jquery = window.$ = window.jQuery = require('jquery');
 var _ = require('lodash');
-var data = require(__dirname + '/data/parliament-elections-2014-bulgaria.json');
-var base = require(__dirname + '/js/largest_reminder_method/00_base.js');
-var regionQuotes = require(__dirname + '/js/largest_reminder_method/01_region_quotes.js');
-var votesMatrix = require(__dirname + '/js/largest_reminder_method/02_votes_matrix.js');
-var nationalMandatesMatrix = require(__dirname + '/js/largest_reminder_method/03_national_mandates_matrix.js');
+var core = require(__dirname + '/js/largest_reminder_method/core.js');
+var helpers = require(__dirname + '/js/largest_reminder_method/helpers.js');
 
-var container = $('#main-container');
-function append(node) {
-    $(container).append(node);
-}
+function renderResults() {
+    var resultsData = require(__dirname + '/js/largest_reminder_method/00_results_data.js');
+    var nationalMandatesMatrix = require(__dirname + '/js/largest_reminder_method/01_national_mandates_matrix.js');
 
-function appendSubSection(message) {
-    $(container).append($('<div class="sub-section">' + message + '</div>'));
-}
+    var container = $('#main-container');
 
-function appendInfoMessage(message) {
-    $(container).append($('<div class="info-message">' + message + '</div>'));
-}
+    function append(node) {
+        $(container).append(node);
+    }
 
-(function () {
+    function appendSubSection(message) {
+        $(container).append($('<div class="sub-section">' + message + '</div>'));
+    }
+
+    function appendInfoMessage(message) {
+        $(container).append($('<div class="info-message">' + message + '</div>'));
+    }
+
     appendSubSection("Районни избирателни квоти:");
-    append(regionQuotes.createTable(data));
+    append(resultsData.buildRegionQuotesMatrix());
 
     appendInfoMessage('Действителни гласове за партии и коалиции от партии по райони:');
-    append(votesMatrix.createTable(data));
+    append(resultsData.buildPartyXRegionVotesMatrix());
 
     appendSubSection('Първа стъпка – разпределение на мандатите за всяка партия и коалиция на национално ниво');
-    appendInfoMessage('Сума от всички действителни гласове: ' + base.getRealVotesSum());
-    appendInfoMessage('Четири на сто от действителните гласове в страната и извън страната: ' + base.getMinimumVotesToGetElected());
-    appendInfoMessage('Сума от действителни гласове за партии и коалиции от партии, които участват в разпределението на мандатите: ' + base.getElectedPartiesVotesSum());
-    appendInfoMessage('Квота на Хеър: ' + base.getHareQuote(base.getElectedPartiesVotesSum(), 240));
+    appendInfoMessage('Сума от всички действителни гласове: ' + core.getRealVotesSum());
+    appendInfoMessage('Четири на сто от действителните гласове в страната и извън страната: ' + core.getMinimumVotesToGetElected());
+    appendInfoMessage('Сума от действителни гласове за партии и коалиции от партии, които участват в разпределението на мандатите: ' + core.getElectedPartiesVotesSum());
+    appendInfoMessage('Квота на Хеър: ' + core.getHareQuote(core.getElectedPartiesVotesSum(), 240));
 
     append(nationalMandatesMatrix.buildNationalPartyMandatesMatrix());
-})();
+}
+
+renderResults();
