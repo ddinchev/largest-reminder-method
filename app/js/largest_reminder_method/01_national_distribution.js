@@ -10,7 +10,7 @@ function buildNationalPartyMandatesSection() {
     helpers.appendInfoMessage(wrapper, 'Сума от всички действителни гласове: ' + core.getRealVotesSum());
     helpers.appendInfoMessage(wrapper, 'Четири на сто от действителните гласове в страната и извън страната: ' + core.getMinimumVotesToGetElected());
     helpers.appendInfoMessage(wrapper, 'Сума от действителни гласове за партии и коалиции от партии, които участват в разпределението на мандатите: ' + core.getElectedPartiesVotesSum());
-    helpers.appendInfoMessage(wrapper, 'Квота на Хеър: ' + core.getHareQuote(core.getElectedPartiesVotesSum(), 240));
+    helpers.appendInfoMessage(wrapper, 'Квота на Хеър: ' + core.getHareQuote(core.getElectedPartiesVotesSum(), core.getTotalMandates()));
 
     var electedPartyDistributions = core.getElectedPartiesDistribution();
     var table = $('<table class="national-level-party-mandates" />');

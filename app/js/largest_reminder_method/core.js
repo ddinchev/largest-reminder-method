@@ -1,8 +1,27 @@
 'use strict';
 
+var data = require(__dirname + '/../../data/parliament-elections-2014-bulgaria.json');
+var electedParties = null;
+var electedPartiesVotesSum = null;
+var electedPartiesDistribution = null;
+
+function resetData() {
+    electedParties = null;
+    electedPartiesVotesSum = null;
+    electedPartiesDistribution = null;
+}
+
 function getData() {
     // encapsulate to be able to store/read data
-    return require(__dirname + '/../../data/parliament-elections-2014-bulgaria.json');
+    return data;
+}
+
+function getTotalMandates() {
+    return data["TOTAL_MANDATES_COUNT"]
+}
+
+function setTotalMandates(mandatesCount) {
+    data["TOTAL_MANDATES_COUNT"] = parseInt(mandatesCount);
 }
 
 function getParties() {
@@ -33,7 +52,6 @@ function getHareQuote(votes, seats) {
     return votes / seats;
 }
 
-var electedParties = null;
 function getElectedParties() {
     if (electedParties === null) {
         electedParties = {};
@@ -47,7 +65,6 @@ function getElectedParties() {
     return electedParties;
 }
 
-var electedPartiesVotesSum = null;
 function getElectedPartiesVotesSum() {
     if (electedPartiesVotesSum === null) {
         electedPartiesVotesSum = _.sum(getElectedParties());
@@ -72,10 +89,6 @@ function getRegionVotes() {
 }
 function getPartyVotesSum(partyId) {
     return _.sum(getData()["partyRegionVotes"][partyId]);
-}
-
-function getTotalMandates() {
-    return 240;
 }
 
 function getRegionQuotes() {
@@ -114,7 +127,6 @@ function getRegionMandates() {
     }));
 }
 
-var electedPartiesDistribution = null;
 function getElectedPartiesDistribution() {
     if (electedPartiesDistribution == null) {
         var totalMandates = getTotalMandates();
@@ -211,6 +223,7 @@ function getRegionPartyDistribution(regionId) {
 
 module.exports = {
     getData: getData,
+    resetData: resetData,
     getParties: getParties,
     getRegions: getRegions,
     getPartyRegionVotes: getPartyRegionVotes,
@@ -224,5 +237,7 @@ module.exports = {
     getRegionVotes: getRegionVotes,
     getRegionMandates: getRegionMandates,
     getRegionPartyDistribution: getRegionPartyDistribution,
-    getElectedPartiesDistribution: getElectedPartiesDistribution
+    getElectedPartiesDistribution: getElectedPartiesDistribution,
+    getTotalMandates: getTotalMandates,
+    setTotalMandates: setTotalMandates
 };
