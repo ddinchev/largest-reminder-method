@@ -38,8 +38,11 @@ function renderResults() {
     append(nationalMandatesMatrix.buildNationalPartyMandatesMatrix());
 
     appendSubSection('Втора стъпка – разпределение на спечелените мандати за всяка партия или коалиция в многомандатните избирателни райони:');
-    _.each(core.getRegions(), function (regionName, regionId) {
-
+    _.each(core.getRegionMandates(), function (mandates, regionId) {
+        var regionName = core.getRegions()[regionId].toUpperCase();
+        appendInfoMessage('Разпределение на мандатите в МИР ' + regionName.toUpperCase());
+        appendInfoMessage('Действителни гласове за партии и коалиции от партии, участващи в разпределение: ');
+        appendInfoMessage('Брой мандати в ' + regionName.toUpperCase() + ': ' + mandates);
         debugger;
     });
 }

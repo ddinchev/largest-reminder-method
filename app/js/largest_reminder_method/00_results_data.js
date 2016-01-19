@@ -35,17 +35,16 @@ function buildPartyXRegionVotesMatrix() {
 
     table.append(function () {
         var row = $('<tr/>');
-        _.each(data.regions, function (region) {
+        _.each(core.getRegions(), function (region) {
             row.append(helpers.cell(region));
         });
         return row;
     });
 
-    table.append(_.map(_.keys(data['parties']), function (partyId) {
-        var partyName = data['parties'][partyId];
+    table.append(_.map(core.getParties(), function (partyName, partyId) {
         var row = helpers.row(partyName);
-        _.each(_.keys(data['regions']), function (regionId) {
-            row.append(helpers.cell(data.partyRegionVotes[partyId][regionId]));
+        _.each(_.keys(core.getRegions()), function (regionId) {
+            row.append(helpers.cell(core.getPartyRegionVotes(partyId, regionId)));
         });
         row.append(helpers.cell(core.getPartyVotesSum(partyId)));
         return row;

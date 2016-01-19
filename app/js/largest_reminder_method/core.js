@@ -13,6 +13,10 @@ function getRegions() {
     return getData()["regions"];
 }
 
+function getPartyRegionVotes(partyId, regionId) {
+    return getData()["partyRegionVotes"][partyId][regionId];
+}
+
 function getRealVotesSum() {
     var partyRegionVotesSum = _.sum(_.map(getData()["partyRegionVotes"], function (partyRegion) {
         return _.sum(partyRegion);
@@ -161,6 +165,7 @@ module.exports = {
     getData: getData,
     getParties: getParties,
     getRegions: getRegions,
+    getPartyRegionVotes: getPartyRegionVotes,
     getRegionQuotes: getRegionQuotes,
     getElectedParties: getElectedParties,
     getElectedPartiesVotesSum: getElectedPartiesVotesSum,
