@@ -8,6 +8,10 @@ function row(firstCell) {
     return $('<tr />').append(cell(firstCell));
 }
 
+function headerRow(firstCell) {
+    return row(firstCell).addClass('header');
+}
+
 function emptyCell() {
     return cell('-');
 }
@@ -27,6 +31,7 @@ function appendInfoMessage(container, message) {
 module.exports = {
     cell: cell,
     row: row,
+    headerRow: headerRow,
     emptyCell: emptyCell,
     append: append,
     appendSectionTitle: appendSectionTitle,

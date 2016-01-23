@@ -17,7 +17,7 @@ function buildRegionalDistributionSections() {
 
         var table = $('<table class="region-party-mandates" />');
         table.append(function() {
-            var headerRow = helpers.row('Партия');
+            var headerRow = helpers.headerRow('Партия');
             var votesRow = helpers.row('Действ. гласове');
             var quotientRow = helpers.row('Частно');
             var baseMandatesRow = helpers.row('Осн. манд.');
@@ -29,8 +29,8 @@ function buildRegionalDistributionSections() {
                 headerRow.append(helpers.cell(party.name));
                 votesRow.append(helpers.cell(party.votes));
                 baseMandatesRow.append(helpers.cell(party.baseMandates));
-                quotientRow.append(helpers.cell(party.quotient.toFixed(6)));
-                remindersRow.append(helpers.cell(party.reminder.toFixed(6)));
+                quotientRow.append(helpers.cell(party.quotient.toFixed(10)));
+                remindersRow.append(helpers.cell(party.reminder.toFixed(10)));
                 extraMandatesRow.append(helpers.cell(party.extraMandates));
                 totalMandatesRow.append(helpers.cell(party.totalMandates));
             });

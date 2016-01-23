@@ -10,7 +10,7 @@ function buildRegionQuotesSection() {
 
     var table = $('<table id="region-quotes-table" class="" />');
 
-    $(table).append('<td align="center" colspan="' + _.size(data["regionQuotes"]) + '">Квоти по райони</td>');
+    $(table).append('<td class="header" align="center" colspan="' + _.size(data["regionQuotes"]) + '">Квоти по райони</td>');
 
     var regionsIdRow = $('<tr/>'),
         regionsQuoteRow = $('<tr/>');
@@ -33,7 +33,7 @@ function buildPartyXRegionVotesSection() {
 
     var table = $(
         '<table id="votes-matrix">' +
-        '<tr align="center">' +
+        '<tr class="header" align="center">' +
         '<td rowspan="2">Партии</td>' +
         '<td colspan="' + _.size(data['regions']) + '">Райони</td>' +
         '<td rowspan="2">Общо</td>' +
@@ -42,7 +42,7 @@ function buildPartyXRegionVotesSection() {
     );
 
     table.append(function () {
-        var row = $('<tr/>');
+        var row = $('<tr class="header" />');
         _.each(core.getRegions(), function (region) {
             row.append(helpers.cell(region));
         });

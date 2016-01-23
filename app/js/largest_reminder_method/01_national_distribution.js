@@ -15,7 +15,7 @@ function buildNationalPartyMandatesSection() {
     var electedPartyDistributions = core.getElectedPartiesDistribution();
     var table = $('<table class="national-level-party-mandates" />');
     table.append(function () {
-        var headerRow = helpers.row('Партия');
+        var headerRow = helpers.headerRow('Партия');
         var realVotesRow = helpers.row('Действ. гласове');
         var quotientRow = helpers.row('Частно');
         var baseMandatesRow = helpers.row('Осн. манд.');
@@ -32,9 +32,9 @@ function buildNationalPartyMandatesSection() {
                 });
             } else {
                 var partyDistribution = electedPartyDistributions[partyId];
-                quotientRow.append(helpers.cell(partyDistribution.quotient.toFixed(6)));
+                quotientRow.append(helpers.cell(partyDistribution.quotient.toFixed(10)));
                 baseMandatesRow.append(helpers.cell(partyDistribution.baseMandates));
-                remindersRow.append(helpers.cell(partyDistribution.reminder.toFixed(6)));
+                remindersRow.append(helpers.cell(partyDistribution.reminder.toFixed(10)));
                 extraMandatesRow.append(helpers.cell(partyDistribution.extraMandates));
                 totalMandatesRow.append(helpers.cell(partyDistribution.totalMandates));
             }
